@@ -103,7 +103,7 @@ function createReceiver(callBack) {
     getMessages: function() {
       var messages = [];
       subscriptions.forEach(function(channel) {
-        messages.push(callBack({ name: channel.name, messages: channel.messages }));
+        messages.push(callBack(Object.assign({}, channel)));
       });
       return messages;
     }
