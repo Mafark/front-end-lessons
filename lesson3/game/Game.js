@@ -27,9 +27,9 @@ Game.prototype.initialize = function() {
   Game.FIELD.addEventListener(
     'click',
     function(e) {
-      var lol = new Ellipse();
-      lol.init(e.pageX, e.pageY);
-      this.figuresGroup.add(lol);
+      var figure = getRandomFigure();
+      figure.init(e.offsetX - figure.width / 2, e.offsetY - figure.height / 2);
+      this.figuresGroup.add(figure);
     }.bind(this)
   );
   this._inited = true;
@@ -61,6 +61,7 @@ Game.prototype.run = function() {
  */
 Game.prototype.nextFrame = function() {
   var figures = this.figuresGroup.getFigures();
+
   for (var figureIndex in figures) {
     figures[figureIndex].go();
   }

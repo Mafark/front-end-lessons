@@ -16,23 +16,18 @@ var Figure = function Figure(width, height, velocity) {
   this.name = 'Неопознаная фигура';
   this.width = width;
   this.height = height;
-  this.velocity = velocity;
+  this.velocity = Math.abs(velocity);
+  this.className = 'figure-base';
 
-  this.init('figure-base');
+  this.init();
 };
 
-Figure.prototype.init = function(className) {
-  this.createElement(className);
-};
-
-Figure.prototype.createElement = function(className) {
-  var div = document.createElement('div');
-  div.className = className;
-  div.style.width = this.width + 'px';
-  div.style.height = this.height + 'px';
-  div.style.top = this.coords.y + 'px';
-  div.style.left = this.coords.x + 'px';
-  this.element = div;
+Figure.prototype.init = function(coordX, coordY) {
+  if (coordX && coordY) {
+    this.coords.x = coordX;
+    this.coords.y = coordY;
+  }
+  this.element = this.createElement();
 };
 
 /* статическое поле */
@@ -41,6 +36,17 @@ Figure.AUTO_INCREMENT = 0;
 Figure.prototype.element = null;
 
 Figure.prototype.coords = { x: 0, y: 0 };
+
+Figure.prototype.createElement = function(className) {
+  var div = document.createElement('div');
+  div.className = this.className;
+  div.style.position = 'absolute';
+  div.style.width = this.width + 'px';
+  div.style.height = this.height + 'px';
+  div.style.top = this.coords.y + 'px';
+  div.style.left = this.coords.x + 'px';
+  return div;
+};
 
 /**
  * @description Вставляет DOM элемент в поле.
@@ -59,8 +65,32 @@ Figure.prototype.go = function() {
     throw new Error('The element not set');
   }
   /* Тут должна быть логика изменения координат для объекта */
-  this.coords.x += this.velocity;
-  this.coords.y += this.velocity;
+
+  // this.coords.x += getRandom(-this.velocity, this.velocity);
+  // this.coords.y += getRandom(-this.velocity, this.velocity);
+
+  var newX = this.coords.x + getRandom(-this.velocity, this.velocity);
+  var newY = this.coords.y + getRandom(-this.velocity, this.velocity);
+
+  if (newX < 0) {
+    newX = this.coords.x + this.velocity;
+  } else if (newX > Game.FIELD.offsetWidth - this.width) {
+    newX = this.coords.x - this.velocity;
+  }
+
+  if (newY < 0) {
+    newY = this.coords.y + this.velocity;
+  } else if (newY > Game.FIELD.offsetHeight - this.height) {
+    newY = this.coords.y - this.velocity;
+  }
+
+  this.coords = {
+    x: newX,
+    y: newY
+  };
+
+  this.element.style.top = this.coords.y + 'px';
+  this.element.style.left = this.coords.x + 'px';
 };
 
 /**
@@ -70,10 +100,10 @@ Figure.prototype.go = function() {
 var Ellipse = function Ellipse(width, height, velocity) {
   Figure.call(this, width, height, velocity);
   this.name = 'Эллипс';
-  this.init('figure-circle');
+  this.className = 'figure-circle';
 };
 Ellipse.prototype = Object.create(Figure.prototype);
-Ellipse.prototype.constructor = Figure;
+Ellipse.prototype.constructor = Ellipse;
 
 /**
  * @description Конструктор класса Circle. Класс наследуется от Ellipse и создает элемент "Круг".
@@ -82,10 +112,10 @@ Ellipse.prototype.constructor = Figure;
 var Circle = function Circle(radius, velocity) {
   Ellipse.call(this, radius, radius, velocity);
   this.name = 'Круг';
-  this.init('figure-circle');
+  this.className = 'figure-circle';
 };
 Circle.prototype = Object.create(Ellipse.prototype);
-Circle.prototype.constructor = Ellipse;
+Circle.prototype.constructor = Circle;
 
 /**
  * @description Конструктор класса Rectangle. Класс наследуется от Figure и создает элемент "Прямоугольник".
@@ -94,10 +124,10 @@ Circle.prototype.constructor = Ellipse;
 var Rectangle = function Rectangle(width, height, velocity) {
   Figure.call(this, width, height, velocity);
   this.name = 'Прямоугольник';
-  this.init('figure-rectangle');
+  this.className = 'figure-rectangle';
 };
 Rectangle.prototype = Object.create(Figure.prototype);
-Rectangle.prototype.constructor = Figure;
+Rectangle.prototype.constructor = Rectangle;
 
 /**
  * @description Конструктор класса Square. Класс наследуется от Rectangle и создает элемент "Квадрат".
@@ -106,9 +136,26 @@ Rectangle.prototype.constructor = Figure;
 var Square = function Square(size, velocity) {
   Rectangle.call(this, size, size, velocity);
   this.name = 'Квадрат';
-  this.init('figure-square');
+  this.className = 'figure-square';
 };
 Square.prototype = Object.create(Rectangle.prototype);
-Square.prototype.constructor = Rectangle;
+Square.prototype.constructor = Square;
 
-var FIGURES = [Ellipse, Circle, Rectangle, Square];
+var getRandomFigure = function() {
+  var velocity = getRandom(1, 20);
+  var figures = [
+    function() {
+      return new Ellipse(getRandom(20, 200), getRandom(20, 200), velocity);
+    },
+    function() {
+      return new Circle(getRandom(20, 200), velocity);
+    },
+    function() {
+      return new Rectangle(getRandom(20, 200), getRandom(20, 200), velocity);
+    },
+    function() {
+      return new Square(getRandom(20, 200), velocity);
+    }
+  ];
+  return figures[getRandom(0, figures.length - 1)]();
+};

@@ -8,7 +8,7 @@ var FiguresGroup = function FiguresGroup(figures_limit_length) {
  * @param figure
  */
 FiguresGroup.prototype.add = function(figure) {
-  this._figures < this._figures_limit_length ? this._figures.push(figure) : null;
+  this._figures.length < this._figures_limit_length ? this._figures.push(figure) : null;
   figure.insertElement();
 };
 
@@ -17,7 +17,7 @@ FiguresGroup.prototype.add = function(figure) {
  * @returns {Figure[]} figures
  */
 FiguresGroup.prototype.getFigures = function() {
-  return this._figures.concat();
+  return this._figures;
 };
 
 /**
