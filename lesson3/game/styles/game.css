@@ -1,0 +1,18 @@
+.figure-base {
+    width: 24px;
+    height: 24px;
+    background-color: #000;
+}
+.figure-circle {
+    background-color: rgba(255, 206, 146, 0.69);
+    border-radius: 50%;
+    border: 1px solid rgba(255, 113, 77, 0.79);
+}
+.figure-rectangle {
+    background-color: rgba(255, 96, 52, 0.6);
+    border: 1px solid rgba(255, 65, 147, 0.76);
+}
+.figure-square {
+    background-color: rgba(255, 65, 147, 0.54);
+    border: 1px solid rgba(22, 57, 255, 0.62);
+}
