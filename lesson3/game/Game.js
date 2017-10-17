@@ -21,17 +21,29 @@ Game.prototype.initialize = function() {
   if (FiguresGroup) {
     this.figuresGroup = new FiguresGroup(this.MAX_FIGURES_NUMBER);
   }
+
   this.figuresCounterElement = document.querySelector('.fields__elements-count');
 
   Game.FIELD = document.querySelector('.field');
+
+  // Создание элемента
   Game.FIELD.addEventListener(
-    'click',
+    'mousedown',
     function(e) {
       var figure = getRandomFigure();
       figure.init(e.offsetX - figure.width / 2, e.offsetY - figure.height / 2);
       this.figuresGroup.add(figure);
     }.bind(this)
   );
+
+  // Увеличение счетчика
+  Game.FIELD.addEventListener(
+    'addFigure',
+    function(e) {
+      this.figuresCounterElement.innerText = e.detail.figuresLength;
+    }.bind(this)
+  );
+
   this._inited = true;
 };
 

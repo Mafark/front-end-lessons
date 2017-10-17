@@ -10,6 +10,14 @@ var FiguresGroup = function FiguresGroup(figures_limit_length) {
 FiguresGroup.prototype.add = function(figure) {
   this._figures.length < this._figures_limit_length ? this._figures.push(figure) : null;
   figure.insertElement();
+
+  // Эвент добавления фигуры
+  var event = new CustomEvent('addFigure', {
+    detail: {
+      figuresLength: this._figures.length
+    }
+  });
+  Game.FIELD.dispatchEvent(event);
 };
 
 /**

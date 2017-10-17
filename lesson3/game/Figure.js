@@ -37,7 +37,7 @@ Figure.prototype.element = null;
 
 Figure.prototype.coords = { x: 0, y: 0 };
 
-Figure.prototype.createElement = function(className) {
+Figure.prototype.createElement = function() {
   var div = document.createElement('div');
   div.className = this.className;
   div.style.position = 'absolute';
@@ -45,6 +45,7 @@ Figure.prototype.createElement = function(className) {
   div.style.height = this.height + 'px';
   div.style.top = this.coords.y + 'px';
   div.style.left = this.coords.x + 'px';
+  div.style.zIndex = -100;
   return div;
 };
 
